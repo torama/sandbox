@@ -3,7 +3,7 @@ var Engine = new function() {
         for (var i in ResourceManager.resources) {
             ResourceManager.resources[i].RenderManager.draw();
         }
-        requestAnimationFrame(Engine.render);
+        window.postMessage('', '*');
     }
 };
 
@@ -80,6 +80,12 @@ function RenderManager(canvas) {
 }
 
 $(function() {
+    var gridDimension = 10;
+    var numRotors = gridDimension*gridDimension;
+
+    for (var i=0; i<numRotors; i++) {
+        $('body').append('<canvas class="rotor" style="width:' + Math.sqrt(((100*100)/(numRotors))) + 'vw; height:' + Math.sqrt(((100*100)/(numRotors))) + 'vh;"></canvas>');
+    }
     $('canvas.rotor').each(function() {
         this.RenderManager = new RenderManager(this);
         this.RenderManager.on('draw', function(canvas) {
@@ -89,17 +95,23 @@ $(function() {
 
             var random = Math.floor(Math.random()*255);
 
-            context.fillStyle = 'rgba(' + Math.floor(Math.random()*255) + ', ' + Math.floor(Math.random()*255) + ', ' + Math.floor(Math.random()*255) + ',  0.3)';
+            context.fillStyle = 'rgba(0, ' + Math.floor(Math.random()*255) + ',0,  0.3)';
             context.fillRect(0, 0, canvas.width, canvas.height);
 
             context.beginPath();
             context.moveTo(1,1);
             context.lineTo(1,canvas.height - 1);
             context.lineTo(canvas.width - 1, canvas.height - 1);
+            context.lineTo(canvas.width - 1, 1);
+            context.lineTo(1, 1);
             context.stroke();
         });
         ResourceManager.add(this);
     });
 
-    requestAnimationFrame(Engine.render);
+    window.addEventListener('message', function() {
+        Engine.render();
+    });
+
+    window.postMessage('', '*');
 });
