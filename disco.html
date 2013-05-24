@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disco Stu</title>
+    <script type="text/javascript" src="js/jquery-2.0.0.js"></script>
+    <script type="text/javascript" src="js/base.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var gridDimension = 25;
+            var numRotors = gridDimension*gridDimension;
+
+            for (var i=0; i<numRotors; i++) {
+                $('body').append('<canvas class="disco" style="width:' + Math.sqrt(((100*100)/(numRotors))) + 'vw; height:' + Math.sqrt(((100*100)/(numRotors))) + 'vh;"></canvas>');
+            }
+            $('canvas.disco').each(function() {
+                this.RenderManager = new RenderManager(this);
+                this.RenderManager.on('draw', function(canvas) {
+                    var renderManager = canvas.RenderManager;
+                    renderManager.context.clearRect(0, 0, canvas.width, canvas.height);
+                    var context = renderManager.context;
+
+                    var red = Math.floor(Math.random()*155) + 100,
+                        green = Math.floor(Math.random()*155) + 100,
+                        blue = Math.floor(Math.random()*155) + 100;
+
+                    context.fillStyle = 'rgba(' + (red) + ',' + (green) + ',' + (blue) + ',  1)';
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+
+                    context.beginPath();
+                    context.moveTo(1,1);
+                    context.lineTo(1,canvas.height - 1);
+                    context.lineTo(canvas.width - 1, canvas.height - 1);
+                    context.lineTo(canvas.width - 1, 1);
+                    context.lineTo(1, 1);
+                    context.stroke();
+                });
+                ResourceManager.add(this);
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/disco/base.css">
+    <link rel="stylesheet" type="text/css" href="css/disco/disco.css">
+</head>
+<body>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+            initBody();
+        /* ]]> */
+    </script>
+</body>
+</html>

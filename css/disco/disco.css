@@ -1,0 +1,33 @@
+.disco {
+    width: 5vw;
+    height: 5vh;
+    padding: 0;
+    margin: 0;
+    float: left;
+    /*-webkit-animation: scaling 2s infinite;
+    animation: scaling 2s infinite;*/
+}
+
+@-webkit-keyframes scaling {
+    0% {
+        -webkit-transform: scale(1) rotate(0deg);
+    }
+    50% {
+        -webkit-transform: scale(0.8) rotate(0deg);
+    }
+    100% {
+        -webkit-transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes scaling {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(0.8) rotate(0deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}

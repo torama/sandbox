@@ -3,7 +3,7 @@ var Engine = new function() {
         for (var i in ResourceManager.resources) {
             ResourceManager.resources[i].RenderManager.draw();
         }
-        window.postMessage('', '*');
+        window.postMessage('render', window.location);
     }
 };
 
@@ -26,6 +26,7 @@ var ResourceManager = new function() {
 function FunctionHook() {
     this._functionList = [];
 }
+
 FunctionHook.prototype.check = function(func) {
     return false;
 };
@@ -35,15 +36,18 @@ FunctionHook.prototype.add = function(func) {
         func.apply(this, Array.prototype.slice.call(arguments, 1));
     }
 };
+
 FunctionHook.prototype.run = function() {
     for (var i=0; i<this._functionList.length; i++) {
         this._functionList[i].apply(this, arguments);
     }
 };
+
 FunctionHook.prototype.clear = function() {
     this.onclear();
     this._functionList = [];
 };
+
 FunctionHook.prototype.onclear = function() {
 
 };
@@ -79,39 +83,16 @@ function RenderManager(canvas) {
     };
 }
 
-$(function() {
-    var gridDimension = 10;
-    var numRotors = gridDimension*gridDimension;
+var InitBody = new FunctionHook();
 
-    for (var i=0; i<numRotors; i++) {
-        $('body').append('<canvas class="rotor" style="width:' + Math.sqrt(((100*100)/(numRotors))) + 'vw; height:' + Math.sqrt(((100*100)/(numRotors))) + 'vh;"></canvas>');
-    }
-    $('canvas.rotor').each(function() {
-        this.RenderManager = new RenderManager(this);
-        this.RenderManager.on('draw', function(canvas) {
-            var renderManager = canvas.RenderManager;
-            renderManager.context.clearRect(0, 0, canvas.width, canvas.height);
-            var context = renderManager.context;
-
-            var random = Math.floor(Math.random()*255);
-
-            context.fillStyle = 'rgba(0, ' + Math.floor(Math.random()*255) + ',0,  0.3)';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            context.beginPath();
-            context.moveTo(1,1);
-            context.lineTo(1,canvas.height - 1);
-            context.lineTo(canvas.width - 1, canvas.height - 1);
-            context.lineTo(canvas.width - 1, 1);
-            context.lineTo(1, 1);
-            context.stroke();
-        });
-        ResourceManager.add(this);
+InitBody.add(function() {
+    window.addEventListener('message', function(evt) {
+        if (evt.data === 'render') { Engine.render(); }
     });
 
-    window.addEventListener('message', function() {
-        Engine.render();
-    });
-
-    window.postMessage('', '*');
+    window.postMessage('render', window.location);
 });
+
+function initBody() {
+    InitBody.run();
+}
