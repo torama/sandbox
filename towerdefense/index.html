@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta carset="utf-8">
+    <title>Towerdefense</title>
+
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    
+    <script type="text/javascript" src="js/base.js"></script>
+    <script type="text/javascript" src="js/towerdefense.js"></script>
+
+    <script type="text/javascript">
+        window.addEventListener('load', function(evt) {
+            var buttons = document.querySelectorAll('nav#actionbar li');
+            for (var i in buttons) {
+                if (typeof buttons[i].addEventListener === 'function') {
+                    buttons[i].addEventListener('mousedown', function(evt) {
+                        this.className += ' down';
+                    });
+
+                    buttons[i].addEventListener('mouseup', function(evt) {
+                        this.className = this.className.replace(/\s+down/ig, '');
+                    });
+                }
+            }
+
+            var actionBarItems = document.querySelectorAll('nav#actionbar li canvas');
+
+            for (var i in actionBarItems) {
+                if (typeof actionBarItems[i].addEventListener === 'function') {
+                    var canvas = actionBarItems[i];
+                    canvas.RenderManager = new RenderManager(canvas);
+                    canvas.RenderManager.on('draw', function(canvas) {
+                        var renderManager = canvas.RenderManager;
+                        var context = renderManager.context;
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+
+                        context.beginPath();
+                        context.moveTo(50,50);
+                        context.lineTo(50,canvas.height - 50);
+                        context.lineTo(canvas.width - 50, canvas.height - 50);
+                        context.lineTo(canvas.width - 50, 50);
+                        context.lineTo(50, 50);
+
+                        context.strokeStyle = 'rgb(100,100,100)';
+                        context.stroke();
+
+                    });
+                    ResourceManager.add(canvas);
+                }
+            }
+
+            /*$('canvas.disco').each(function() {
+                this.RenderManager = new RenderManager(this);
+                this.RenderManager.on('draw', function(canvas) {
+                    var renderManager = canvas.RenderManager;
+                    renderManager.context.clearRect(0, 0, canvas.width, canvas.height);
+                    var context = renderManager.context;
+
+                    var red = Math.floor(Math.random()*155) + 100,
+                        green = Math.floor(Math.random()*155) + 100,
+                        blue = Math.floor(Math.random()*155) + 100;
+
+                    context.fillStyle = 'rgba(' + (red) + ',' + (green) + ',' + (blue) + ',  1)';
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+
+                    context.beginPath();
+                    context.moveTo(1,1);
+                    context.lineTo(1,canvas.height - 1);
+                    context.lineTo(canvas.width - 1, canvas.height - 1);
+                    context.lineTo(canvas.width - 1, 1);
+                    context.lineTo(1, 1);
+                    context.stroke();
+                });
+                ResourceManager.add(this);
+            });*/
+        });
+    </script>
+</head>
+<body>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        initBody();
+        /* ]]> */
+    </script>
+    <header>
+        <nav>
+            <ul>
+                <li></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section>
+
+    </section>
+
+    <aside>
+    </aside>
+
+    <footer>
+        <nav id="actionbar">
+            <ul>
+                <li><canvas class="guntower tower-icon" width="64" height="64"></canvas></li>
+                <li><canvas class="slowtower tower-icon" width="64" height="64"></canvas></li>
+                <li><canvas class="lassertower tower-icon" width="64" height="64"></canvas></li>
+                <li><canvas class="poisontower tower-icon" width="64" height="64"></canvas></li>
+                <li><canvas class="firetower tower-icon" width="64" height="64"></canvas></li>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+</html>

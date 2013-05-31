@@ -22,7 +22,7 @@ $.appendHeadScript('js/tools/ajax.js');
 var Engine = new function() {
     this.render = function() {
         for (var i in ResourceManager.resources) {
-            ResourceManager.getResources()[i].RenderManager.draw();
+            ResourceManager.resources[i].RenderManager.draw();
         }
         window.postMessage('render', window.location);
     }
@@ -38,11 +38,13 @@ var ResourceManager = new function() {
     this.remove = function(resource) {
         this._resources.splice(resource, 1);
     };
-
-    this.getResources = function() {
-        return this._resources;
-    };
 };
+
+Object.defineProperty(ResourceManager, 'resources', {
+    get: function() {
+        return this._resources;
+    }
+});
 
 function FunctionHook() {
     this._functionList = [];
@@ -103,6 +105,15 @@ function RenderManager(canvas) {
         this._events.draw.run(canvas);
     };
 }
+
+Object.defineProperty(RenderManager.prototype, 'context', {
+    get: function() {
+        return this._context;
+    },
+    set: function(context) {
+        this._context = context;
+    }
+});
 
 var InitBody = new FunctionHook();
 
